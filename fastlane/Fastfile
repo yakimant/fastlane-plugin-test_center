@@ -47,6 +47,25 @@ lane :integration_test_basic_edgecase_1 do
   )
 end
 
+lane :integration_test_prebuilt_xctestrun do
+  scan(
+    workspace: File.absolute_path('../AtomicBoy/AtomicBoy.xcworkspace'),
+    scheme: 'AtomicBoy',
+    build_for_testing: true,
+    derived_data_path: "./fastlane/DerivedData"
+  )
+  multi_scan(
+    workspace: File.absolute_path('../AtomicBoy/AtomicBoy.xcworkspace'),
+    scheme: 'AtomicBoy',
+    fail_build: false,
+    try_count: 2,
+    clean: true,
+    test_without_building: true,
+    derived_data_path: "./fastlane/DerivedData",
+    only_testing: ['AtomicBoyUITests']
+  ) 
+end
+
 lane :integration_test_parallel do
   multi_scan(
     workspace: File.absolute_path('../AtomicBoy/AtomicBoy.xcworkspace'),
