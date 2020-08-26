@@ -74,6 +74,7 @@ module TestCenter
           FastlaneCore::UI.message("Found these xctestrun files in #{derived_data_path}: #{xctestrun_files}")
           FastlaneCore::UI.crash!("Exiting early as there isn't anything we can do")
         end
+        path
       end
 
       def testables
