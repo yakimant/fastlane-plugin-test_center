@@ -67,7 +67,13 @@ module TestCenter
 
       def derived_testrun_path(derived_data_path, scheme)
         xctestrun_files = Dir.glob("#{derived_data_path}/Build/Products/*.xctestrun")
-        xctestrun_files.sort { |f1, f2| File.mtime(f1) <=> File.mtime(f2) }.last
+        path = xctestrun_files.sort { |f1, f2| File.mtime(f1) <=> File.mtime(f2) }.last
+        if path.to_s.empty?
+          FastlaneCore::UI.important("Unable to find any xctestrun files in the expected place")
+          xctestrun_files = Dir.glob("#{derived_data_path}/*.xctestrun")
+          FastlaneCore::UI.message("Found these xctestrun files in #{derived_data_path}: #{xctestrun_files}")
+          FastlaneCore::UI.crash!("Exiting early as there isn't anything we can do")
+        end
       end
 
       def testables

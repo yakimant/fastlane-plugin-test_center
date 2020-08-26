@@ -274,8 +274,14 @@ module Fastlane
           glob_pattern = "#{Scan.config[:derived_data_path]}/Build/Products/*_#{scan_options[:testplan]}_*.xctestrun"
         end
         xctestrun_files = Dir.glob(glob_pattern)
-        UI.verbose("After building, found xctestrun files #{xctestrun_files} (choosing 1st)")
-        scan_options[:xctestrun] = xctestrun_files.first
+        if xctestrun_files.last.to_s.empty?
+          UI.important("Unexpectedly unable to find any *.xctestrun file at #{glob_pattern}")
+          xctestrun_files = Dir.glob("#{Scan.config[:derived_data_path]}/**/*.xctestrun")
+          UI.message("Found #{xctestrun_files}")
+        else
+          UI.verbose("After building, found xctestrun files #{xctestrun_files} (choosing 1st)")
+          scan_options[:xctestrun] = xctestrun_files.first
+        end
       end
 
       def self.remove_preexisting_xctestrun_files
@@ -564,6 +570,16 @@ module Fastlane
             fail_build: false,
             try_count: 2,
             batch_count: 2
+          )
+          ",
+          "
+          UI.header('build_for_testing')
+          multi_scan(
+            workspace: File.absolute_path('../AtomicBoy/AtomicBoy.xcworkspace'),
+            scheme: 'AtomicBoy',
+            fail_build: false,
+            try_count: 2,
+            build_for_testing: true
           )
           "
         ]
