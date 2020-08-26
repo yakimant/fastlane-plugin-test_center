@@ -274,12 +274,12 @@ module Fastlane
           glob_pattern = "#{Scan.config[:derived_data_path]}/Build/Products/*_#{scan_options[:testplan]}_*.xctestrun"
         end
         xctestrun_files = Dir.glob(glob_pattern)
-        if xctestrun_files.last.to_s.empty?
+        if xctestrun_files.empty?
           UI.important("Unexpectedly unable to find any *.xctestrun file at #{glob_pattern}")
           xctestrun_files = Dir.glob("#{Scan.config[:derived_data_path]}/**/*.xctestrun")
           UI.message("Found #{xctestrun_files}")
         else
-          UI.verbose("After building, found xctestrun files #{xctestrun_files} (choosing 1st)")
+          UI.verbose("Hello! After building, found xctestrun files #{xctestrun_files} (choosing 1st)")
           scan_options[:xctestrun] = xctestrun_files.first
         end
       end
