@@ -22,3 +22,20 @@ action_integration_tests.each do |action_name, integration_tests|
     end
   end
 end
+
+lane :issue_283 do
+  multi_scan(
+    workspace: File.absolute_path('../AtomicBoy/AtomicBoy.xcworkspace'),
+    scheme: 'AtomicBoy',
+    try_count: 3,
+    output_types: 'json',
+    output_files: 'report.json',
+    fail_build: false
+  )
+  xcov(
+    workspace: File.absolute_path('../AtomicBoy/AtomicBoy.xcworkspace'),
+    scheme: 'AtomicBoy',
+    json_report: true,
+    markdown_report: true
+  )
+end
